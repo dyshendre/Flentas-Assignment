@@ -1,0 +1,78 @@
+package com.flentas;
+
+import java.util.*;
+import java.text.*;
+
+public class Demo {
+
+    public static void main(String[] args) { 
+        String[][] callLogs={
+            {"9898989898", "8989898989", "00:05:23"},
+            {"1898989898", "9989898989", "01:00:23"},
+            {"2898989898", "7989898989", "00:00:21"},
+            {"2898989898", "6989898989", "00:00:23"},
+            {"4898989898", "5989898989", "00:01:23"},
+            {"5898989898", "4989898989", "00:05:55"},
+            {"5898989898", "3989898989", "00:00:23"},
+            {"7898989898", "2989898989", "00:02:23"},
+            {"8898989898", "1189898989", "00:05:20"},
+            {"1098989898", "8459898989", "00:00:23"},
+            {"1898989898", "8967898989", "00:00:40"},
+            {"2898989898", "8989898989", "00:05:23"}
+        };
+
+        
+        Set<String> distinctFromNumbers=new HashSet<>();
+        
+        Set<String> distinctFree=new HashSet<>();
+        
+      
+        double totalIncome=0.0;
+        long totalCallDuration=0;
+        int freeCalls=0;
+       
+        for (String[] callLog: callLogs) 
+        {
+            String fromNumber= callLog[0];
+            String toNumber= callLog[1];
+            String callDurationStr= callLog[2];
+            
+            
+            String[] callDurationArr = callDurationStr.split(":");
+            long callDuration = Long.parseLong(callDurationArr[0]) * 3600
+                    + Long.parseLong(callDurationArr[1]) * 60
+            		+Long.parseLong(callDurationArr[2]);
+
+            if(callDuration<60)
+            {
+            	distinctFree.add(fromNumber);
+            }
+            distinctFromNumbers.add(fromNumber);
+     
+           
+            
+            // Calculate call cost and add to total income
+            if (callDuration > 60) {
+                double callCost = (callDuration - 60) * 0.3;
+                totalIncome += callCost;
+            }
+            
+            // Add call duration to total call duration for the day
+            totalCallDuration += callDuration;
+        }
+        
+        
+       
+        System.out.println("Distinct from numbers: " + distinctFromNumbers.size());
+        System.out.println("Distinct From Numbers who used the Free Plan: "+distinctFree.size());
+        System.out.println("Total call duration for the day: " + formatSeconds(totalCallDuration));
+        System.out.println("Total income for the day: " + NumberFormat.getCurrencyInstance().format(totalIncome));
+  
+        }
+    
+    private static String formatSeconds(long seconds) {
+        return String.format("%02d:%02d:%02d", seconds / 3600, (seconds % 3600) / 60, seconds % 60);
+    }
+
+}
+
